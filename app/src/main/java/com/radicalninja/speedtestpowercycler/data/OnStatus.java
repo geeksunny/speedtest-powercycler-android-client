@@ -2,8 +2,6 @@ package com.radicalninja.speedtestpowercycler.data;
 
 import android.text.TextUtils;
 
-import com.radicalninja.speedtestpowercycler.JsonResponse;
-
 import org.json.JSONObject;
 
 public class OnStatus extends JsonResponse<OnStatus> {

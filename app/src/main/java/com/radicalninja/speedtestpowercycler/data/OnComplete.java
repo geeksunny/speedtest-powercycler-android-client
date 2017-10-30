@@ -1,7 +1,5 @@
 package com.radicalninja.speedtestpowercycler.data;
 
-import com.radicalninja.speedtestpowercycler.JsonResponse;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

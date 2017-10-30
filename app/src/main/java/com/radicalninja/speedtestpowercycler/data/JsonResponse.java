@@ -1,4 +1,4 @@
-package com.radicalninja.speedtestpowercycler;
+package com.radicalninja.speedtestpowercycler.data;
 
 import org.json.JSONObject;
 
