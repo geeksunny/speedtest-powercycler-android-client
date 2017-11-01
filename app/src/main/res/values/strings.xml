@@ -3,4 +3,23 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <string name="speedtest_status_ready">Ready</string>
+    <string name="speedtest_status_not_ready">Not Ready</string>
+    <string name="speedtest_status_connecting">Connecting</string>
+    <string name="speedtest_status_running">Running Test</string>
+    <string name="speedtest_status_finished">Finished</string>
+
+    <string name="speedtest_button_start">Start Test</string>
+    <string name="speedtest_button_stop">Stop Test</string>
+    <string name="speedtest_button_busy">Busy</string>
+
+    <string name="speedtest_label_ping">Ping</string>
+    <string name="speedtest_label_download">Download</string>
+    <string name="speedtest_label_upload">Upload</string>
+    <string name="speedtest_label_progress">Progress</string>
+
+    <string name="speedtest_suffix_ping">ms</string>
+    <string name="speedtest_suffix_speed"> Mbps</string>
+    <string name="speedtest_suffix_progress">%</string>
 </resources>

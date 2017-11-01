@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/label_status"
+        android:text="@string/speedtest_status_not_ready"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/button_start_stop"
+        android:text="@string/speedtest_button_busy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.radicalninja.speedtestpowercycler.ui.view.TextValueView
+        android:id="@+id/value_ping"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:label="@string/speedtest_label_ping"
+        app:value="0"
+        app:suffix="@string/speedtest_suffix_ping" />
+
+    <com.radicalninja.speedtestpowercycler.ui.view.TextValueView
+        android:id="@+id/value_download"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:label="@string/speedtest_label_download"
+        app:value="0"
+        app:suffix="@string/speedtest_suffix_speed" />
+
+    <com.radicalninja.speedtestpowercycler.ui.view.TextValueView
+        android:id="@+id/value_upload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:label="@string/speedtest_label_upload"
+        app:value="0"
+        app:suffix="@string/speedtest_suffix_speed" />
+
+    <com.radicalninja.speedtestpowercycler.ui.view.TextValueView
+        android:id="@+id/value_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:label="@string/speedtest_label_progress"
+        app:value="0"
+        app:suffix="@string/speedtest_suffix_progress" />
+
+</LinearLayout>
