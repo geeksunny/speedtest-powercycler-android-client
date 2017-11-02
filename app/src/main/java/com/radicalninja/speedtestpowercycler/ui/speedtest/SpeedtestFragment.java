@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.radicalninja.speedtestpowercycler.App;
 import com.radicalninja.speedtestpowercycler.R;
 import com.radicalninja.speedtestpowercycler.SpeedtestSocket;
 import com.radicalninja.speedtestpowercycler.data.OnComplete;
@@ -23,11 +25,15 @@ import org.json.JSONObject;
 
 public class SpeedtestFragment extends Fragment implements View.OnClickListener {
 
-    private boolean ready;
+    private final SocketListener socketListener = new SocketListener();
 
     private TextView statusLabel;
     private Button startStopButton;
     private TextValueView pingView, downloadView, uploadView, progressView;
+
+    public static SpeedtestFragment newInstance() {
+        return new SpeedtestFragment();
+    }
 
     @Nullable
     @Override
@@ -36,6 +42,7 @@ public class SpeedtestFragment extends Fragment implements View.OnClickListener 
 
         statusLabel = view.findViewById(R.id.label_status);
         startStopButton = view.findViewById(R.id.button_start_stop);
+        startStopButton.setOnClickListener(this);
 
         pingView = view.findViewById(R.id.value_ping);
         downloadView = view.findViewById(R.id.value_download);
@@ -53,25 +60,35 @@ public class SpeedtestFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onStart() {
         super.onStart();
-        //
+        App.getInstance().getSocket().addEventListener(socketListener);
+        App.getInstance().getSocket().addUpdateListener(socketListener);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        //
+        App.getInstance().getSocket().removeEventListener(socketListener);
+        App.getInstance().getSocket().removeUpdateListener(socketListener);
     }
 
     @Override
     public void onClick(View view) {
         // TODO: Start/stop the test
+        final SpeedtestSocket socket = App.getInstance().getSocket();
+        if (!socket.isReady()) {
+            // not ready yet
+            // TODO: Alert the user
+            Toast.makeText(getContext(), "Socket not ready", Toast.LENGTH_SHORT).show();
+        } else if (!socket.isRunning()) {
+            Toast.makeText(getContext(), "Starting test", Toast.LENGTH_SHORT).show();
+            socket.startTest();
+        } else {
+            Toast.makeText(getContext(), "Stopping test", Toast.LENGTH_SHORT).show();
+            socket.stopTest();
+        }
     }
 
     private void setReady(final boolean ready) {
-        if (this.ready == ready) {
-            return;
-        }
-        this.ready = ready;
         startStopButton.setEnabled(ready);
         statusLabel.setText(ready ? R.string.speedtest_status_ready : R.string.speedtest_status_not_ready);
     }
@@ -85,29 +102,45 @@ public class SpeedtestFragment extends Fragment implements View.OnClickListener 
 
         @Override
         public void onReady() {
-            setReady(true);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setReady(true);
+                }
+            });
         }
 
         @Override
         public void onFinished() {
-            setReady(false);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setReady(false);
+                }
+            });
         }
 
         @Override
-        public void onAttached(@Nullable OnProgress progress, @Nullable OnStatus status) {
-            if (null != progress) {
-                progressView.setValue(String.valueOf(progress.getProgress()));
-            }
-            if (null != status) {
-                switch (status.getDirection()) {
-                    case UPLOAD:
-                        uploadView.setValue(prepareSpeed(status.getUp()));
-                    case DOWNLOAD:
-                        downloadView.setValue(prepareSpeed(status.getDown()));
-                    case PING:
-                        pingView.setValue(String.valueOf(status.getPing()));
+        public void onAttached(@Nullable final OnProgress progress, @Nullable final OnStatus status) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (null != progress) {
+                        progressView.setValue(String.valueOf(progress.getProgress()));
+                    }
+                    if (null != status) {
+                        switch (status.getDirection()) {
+                            case UPLOAD:
+                                uploadView.setValue(prepareSpeed(status.getUp()));
+                            case DOWNLOAD:
+                                downloadView.setValue(prepareSpeed(status.getDown()));
+                            case PING:
+                                pingView.setValue(String.valueOf(status.getPing()));
+                        }
+                    }
+                    // TODO: Ensure the button state is correct
                 }
-            }
+            });
         }
 
         @Override

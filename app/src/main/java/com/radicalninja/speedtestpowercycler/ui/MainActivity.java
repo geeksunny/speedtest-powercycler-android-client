@@ -3,15 +3,19 @@ package com.radicalninja.speedtestpowercycler.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.radicalninja.speedtestpowercycler.App;
 import com.radicalninja.speedtestpowercycler.R;
+import com.radicalninja.speedtestpowercycler.ui.speedtest.SpeedtestFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mTextMessage;
+    private SpeedtestFragment fragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -20,13 +24,13 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+                    //
                     return true;
                 case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
+                    //
                     return true;
                 case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
+                    //
                     return true;
             }
             return false;
@@ -38,10 +42,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        App.getInstance().initSocket();
 
-        mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        final FragmentManager fm = getSupportFragmentManager();
+        fragment = SpeedtestFragment.newInstance();
+        final FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.commit();
     }
 
 }

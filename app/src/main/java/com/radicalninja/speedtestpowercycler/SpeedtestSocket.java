@@ -56,6 +56,7 @@ public class SpeedtestSocket {
     private final EventListener eventListener = new EventListenerImpl();
     private final List<EventListener> eventListeners = Collections.synchronizedList(new ArrayList<EventListener>());
 
+    private boolean ready, running;
     private OnProgress lastProgress;
     private OnStatus lastStatus;
 
@@ -69,7 +70,7 @@ public class SpeedtestSocket {
     }
 
     public SpeedtestSocket(final String url) throws URISyntaxException {
-        socket = IO.socket(url);
+        socket = IO.socket(url);    // TODO: Implement socket disconnect code
         init();
     }
 
@@ -77,6 +78,47 @@ public class SpeedtestSocket {
         socket.on(EVENT_READY, onEventReady);
         socket.on(EVENT_UPDATE, onEventUpdate);
         socket.on(EVENT_FINISHED, onEventFinished);
+    }
+
+    public void connect() {
+        if (!socket.connected()) {
+            socket.connect();
+        }
+    }
+
+    public void disconnect() {
+        if (socket.connected()) {
+            socket.disconnect();
+        }
+    }
+
+    public void startTest() {
+        if (running) {
+            return;
+        }
+        socket.emit("start", true);
+        running = true;
+    }
+
+    public void stopTest() {
+        if (!running) {
+            return;
+        }
+        socket.emit("stop");
+        //handleFinished(null);   // TODO: Is this necessary? "finish" should trigger when the test is successfully stopped.
+    }
+
+    public void reset() {
+        lastProgress = null;
+        lastStatus = null;
+    }
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 
     public void addUpdateListener(final UpdateListener listener) {
@@ -133,8 +175,8 @@ public class SpeedtestSocket {
     private final Emitter.Listener onEventReady = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            final JSONObject json = (JSONObject) args[0];
-            // TODO: Set object as ready to proceed
+            ready = true;
+            final JSONObject json = (args.length > 0) ? (JSONObject) args[0] : null;
             handleReady(json);
         }
     };
@@ -158,8 +200,8 @@ public class SpeedtestSocket {
     private final Emitter.Listener onEventFinished = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            final JSONObject json = (JSONObject) args[0];
-            // TODO: Set object to stopped
+            running = true;
+            final JSONObject json = (args.length > 0) ? (JSONObject) args[0] : null;
             handleFinished(json);
         }
     };
