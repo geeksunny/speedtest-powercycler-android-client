@@ -16,6 +16,66 @@ public class OnComplete extends JsonResponse<OnComplete> {
         super(raw);
     }
 
+    public String getUpload() {
+        return upload;
+    }
+
+    public String getDownload() {
+        return download;
+    }
+
+    public String getNearest() {
+        return nearest;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public String getJitter() {
+        return jitter;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public String getDns() {
+        return dns;
+    }
+
+    public String getGradesString() {
+        return grades;
+    }
+
+    public String getSid() {
+        return sid;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public int getPing() {
+        return ping;
+    }
+
+    public int getCpubench() {
+        return cpubench;
+    }
+
+    public boolean isHttps() {
+        return https;
+    }
+
+    public Server[] getServers() {
+        return servers;
+    }
+
+    public Grades getGrades() {
+        return grades1;
+    }
+
     @Override
     protected void parse(JSONObject json) {
         upload = json.optString("upload");

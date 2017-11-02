@@ -1,5 +1,7 @@
 package com.radicalninja.speedtestpowercycler;
 
+import android.support.annotation.Nullable;
+
 import com.radicalninja.speedtestpowercycler.data.OnComplete;
 import com.radicalninja.speedtestpowercycler.data.OnConfirm;
 import com.radicalninja.speedtestpowercycler.data.OnError;
@@ -20,7 +22,7 @@ import io.socket.emitter.Emitter;
 
 public class SpeedtestSocket {
 
-    interface UpdateListener {
+    public interface UpdateListener {
         void onProgress(final OnProgress data, final JSONObject raw);
         void onStatus(final OnStatus data, final JSONObject raw);
         void onComplete(final OnComplete data, final JSONObject raw);
@@ -28,8 +30,9 @@ public class SpeedtestSocket {
         void onConfirm(final OnConfirm data, final JSONObject raw);
     }
 
-    interface EventListener {
+    public interface EventListener {
         void onReady();
+        void onAttached(@Nullable final OnProgress progress, @Nullable final OnStatus status);
         void onFinished();
     }
 
@@ -52,6 +55,9 @@ public class SpeedtestSocket {
     private final List<UpdateListener> updateListeners = Collections.synchronizedList(new ArrayList<UpdateListener>());
     private final EventListener eventListener = new EventListenerImpl();
     private final List<EventListener> eventListeners = Collections.synchronizedList(new ArrayList<EventListener>());
+
+    private OnProgress lastProgress;
+    private OnStatus lastStatus;
 
     public static SpeedtestSocket create(final String url) {
         try {
@@ -163,6 +169,7 @@ public class SpeedtestSocket {
         @Override
         public void onProgress(OnProgress data, JSONObject raw) {
             synchronized (updateListeners) {
+                lastProgress = data;
                 for (final UpdateListener listener : updateListeners) {
                     listener.onProgress(data, raw);
                 }
@@ -172,6 +179,7 @@ public class SpeedtestSocket {
         @Override
         public void onStatus(OnStatus data, JSONObject raw) {
             synchronized (updateListeners) {
+                lastStatus = data;
                 for (final UpdateListener listener : updateListeners) {
                     listener.onStatus(data, raw);
                 }
@@ -212,6 +220,18 @@ public class SpeedtestSocket {
             synchronized (eventListeners) {
                 for (final EventListener listener : eventListeners) {
                     listener.onReady();
+                }
+            }
+        }
+
+        @Override
+        public void onAttached(@Nullable final OnProgress progress, @Nullable final OnStatus status) {
+            synchronized (eventListeners) {
+                if (null == progress && null == status) {
+                    return;
+                }
+                for (final EventListener listener : eventListeners) {
+                    listener.onAttached(progress, status);
                 }
             }
         }

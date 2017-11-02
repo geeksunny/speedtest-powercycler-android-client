@@ -45,6 +45,34 @@ public class OnStatus extends JsonResponse<OnStatus> {
         super(raw);
     }
 
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public String getDirectionString() {
+        return directionString;
+    }
+
+    public double getDown() {
+        return down;
+    }
+
+    public double getDownload() {
+        return download;
+    }
+
+    public double getUp() {
+        return up;
+    }
+
+    public double getUpload() {
+        return upload;
+    }
+
+    public int getPing() {
+        return ping;
+    }
+
     @Override
     protected void parse(JSONObject json) {
         directionString = json.optString("direction");

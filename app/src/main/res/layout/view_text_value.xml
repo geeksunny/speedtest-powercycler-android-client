@@ -8,6 +8,7 @@
     <TextView
         android:id="@+id/label"
         tools:text="Label"
+        style="@style/TextValueView.Label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center" />
@@ -15,6 +16,7 @@
     <TextView
         android:id="@+id/value"
         tools:text="9.99 MB"
+        style="@style/TextValueView.Value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center" />

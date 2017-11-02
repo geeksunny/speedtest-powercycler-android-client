@@ -10,6 +10,10 @@ public class OnError extends JsonResponse<OnError> {
         super(raw);
     }
 
+    public String getMessage() {
+        return message;
+    }
+
     @Override
     protected void parse(JSONObject json) {
         message = json.optString("msg");

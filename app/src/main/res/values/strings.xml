@@ -20,6 +20,6 @@
     <string name="speedtest_label_progress">Progress</string>
 
     <string name="speedtest_suffix_ping">ms</string>
-    <string name="speedtest_suffix_speed"> Mbps</string>
+    <string name="speedtest_suffix_speed">&#160;Mbps</string>
     <string name="speedtest_suffix_progress">%</string>
 </resources>
