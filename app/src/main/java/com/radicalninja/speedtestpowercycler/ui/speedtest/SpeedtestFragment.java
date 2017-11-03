@@ -102,45 +102,30 @@ public class SpeedtestFragment extends Fragment implements View.OnClickListener 
 
         @Override
         public void onReady() {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setReady(true);
-                }
-            });
+            setReady(true);
         }
 
         @Override
         public void onFinished() {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setReady(false);
-                }
-            });
+            setReady(false);
         }
 
         @Override
         public void onAttached(@Nullable final OnProgress progress, @Nullable final OnStatus status) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (null != progress) {
-                        progressView.setValue(String.valueOf(progress.getProgress()));
-                    }
-                    if (null != status) {
-                        switch (status.getDirection()) {
-                            case UPLOAD:
-                                uploadView.setValue(prepareSpeed(status.getUp()));
-                            case DOWNLOAD:
-                                downloadView.setValue(prepareSpeed(status.getDown()));
-                            case PING:
-                                pingView.setValue(String.valueOf(status.getPing()));
-                        }
-                    }
-                    // TODO: Ensure the button state is correct
+            if (null != progress) {
+                progressView.setValue(String.valueOf(progress.getProgress()));
+            }
+            if (null != status) {
+                switch (status.getDirection()) {
+                    case UPLOAD:
+                        uploadView.setValue(prepareSpeed(status.getUp()));
+                    case DOWNLOAD:
+                        downloadView.setValue(prepareSpeed(status.getDown()));
+                    case PING:
+                        pingView.setValue(String.valueOf(status.getPing()));
                 }
-            });
+            }
+            // TODO: Ensure the button state is correct
         }
 
         @Override
@@ -158,7 +143,7 @@ public class SpeedtestFragment extends Fragment implements View.OnClickListener 
                     downloadView.setValue(prepareSpeed(data.getDown()));
                     break;
                 case UPLOAD:
-                    downloadView.setValue(prepareSpeed(data.getUp()));
+                    uploadView.setValue(prepareSpeed(data.getUp()));
                     break;
             }
         }

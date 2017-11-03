@@ -1,5 +1,7 @@
 package com.radicalninja.speedtestpowercycler;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 
 import com.radicalninja.speedtestpowercycler.data.OnComplete;
@@ -51,6 +53,7 @@ public class SpeedtestSocket {
     private static final String UPDATE_CONFIRM = "onconfirm";
 
     private final Socket socket;
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private final UpdateListener updateListener = new UpdateListenerImpl();
     private final List<UpdateListener> updateListeners = Collections.synchronizedList(new ArrayList<UpdateListener>());
     private final EventListener eventListener = new EventListenerImpl();
@@ -138,7 +141,7 @@ public class SpeedtestSocket {
     }
 
     protected void handleReady(final JSONObject data) {
-        // TODO: Pass data to listener?
+        // TODO: Configuration data could be passed in this event.
         eventListener.onReady();
     }
 
@@ -209,82 +212,130 @@ public class SpeedtestSocket {
     // TODO: Any way to cut down on duplicate code here? Lambda requires AS3.0
     private class UpdateListenerImpl implements UpdateListener {
         @Override
-        public void onProgress(OnProgress data, JSONObject raw) {
-            synchronized (updateListeners) {
-                lastProgress = data;
-                for (final UpdateListener listener : updateListeners) {
-                    listener.onProgress(data, raw);
+        public void onProgress(final OnProgress data, final JSONObject raw) {
+            lastProgress = data;
+            final Runnable task = new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (updateListeners) {
+                        for (final UpdateListener listener : updateListeners) {
+                            listener.onProgress(data, raw);
+                        }
+                    }
                 }
-            }
+            };
+            handler.post(task);
         }
 
         @Override
-        public void onStatus(OnStatus data, JSONObject raw) {
-            synchronized (updateListeners) {
-                lastStatus = data;
-                for (final UpdateListener listener : updateListeners) {
-                    listener.onStatus(data, raw);
+        public void onStatus(final OnStatus data, final JSONObject raw) {
+            lastStatus = data;
+            final Runnable task = new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (updateListeners) {
+                        for (final UpdateListener listener : updateListeners) {
+                            listener.onStatus(data, raw);
+                        }
+                    }
                 }
-            }
+            };
+            handler.post(task);
         }
 
         @Override
-        public void onComplete(OnComplete data, JSONObject raw) {
-            synchronized (updateListeners) {
-                for (final UpdateListener listener : updateListeners) {
-                    listener.onComplete(data, raw);
+        public void onComplete(final OnComplete data, final JSONObject raw) {
+            final Runnable task = new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (updateListeners) {
+                        for (final UpdateListener listener : updateListeners) {
+                            listener.onComplete(data, raw);
+                        }
+                    }
                 }
-            }
+            };
+            handler.post(task);
         }
 
         @Override
-        public void onError(OnError data, JSONObject raw) {
-            synchronized (updateListeners) {
-                for (final UpdateListener listener : updateListeners) {
-                    listener.onError(data, raw);
+        public void onError(final OnError data, final JSONObject raw) {
+            final Runnable task = new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (updateListeners) {
+                        for (final UpdateListener listener : updateListeners) {
+                            listener.onError(data, raw);
+                        }
+                    }
                 }
-            }
+            };
+            handler.post(task);
         }
 
         @Override
-        public void onConfirm(OnConfirm data, JSONObject raw) {
-            synchronized (updateListeners) {
-                for (final UpdateListener listener : updateListeners) {
-                    listener.onConfirm(data, raw);
+        public void onConfirm(final OnConfirm data, final JSONObject raw) {
+            final Runnable task = new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (updateListeners) {
+                        for (final UpdateListener listener : updateListeners) {
+                            listener.onConfirm(data, raw);
+                        }
+                    }
                 }
-            }
+            };
+            handler.post(task);
         }
     }
 
     private class EventListenerImpl implements EventListener {
         @Override
         public void onReady() {
-            synchronized (eventListeners) {
-                for (final EventListener listener : eventListeners) {
-                    listener.onReady();
+            final Runnable task = new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (eventListeners) {
+                        for (final EventListener listener : eventListeners) {
+                            listener.onReady();
+                        }
+                    }
                 }
-            }
+            };
+            handler.post(task);
         }
 
         @Override
         public void onAttached(@Nullable final OnProgress progress, @Nullable final OnStatus status) {
-            synchronized (eventListeners) {
-                if (null == progress && null == status) {
-                    return;
-                }
-                for (final EventListener listener : eventListeners) {
-                    listener.onAttached(progress, status);
-                }
+            if (null == progress && null == status) {
+                return;
             }
+            final Runnable task = new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (eventListeners) {
+                        for (final EventListener listener : eventListeners) {
+                            listener.onAttached(progress, status);
+                        }
+                    }
+                }
+            };
+            handler.post(task);
         }
 
         @Override
         public void onFinished() {
-            synchronized (eventListeners) {
-                for (final EventListener listener : eventListeners) {
-                    listener.onFinished();
+            final Runnable task = new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (eventListeners) {
+                        for (final EventListener listener : eventListeners) {
+                            listener.onFinished();
+                        }
+                    }
                 }
-            }
+            };
+            handler.post(task);
         }
     }
 
