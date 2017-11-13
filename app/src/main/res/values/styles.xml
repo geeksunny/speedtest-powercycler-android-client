@@ -14,13 +14,24 @@
 
     <style name="TextValueView.Label">
         <item name="android:textSize">@dimen/textvalueview_label_text_size</item>
-        <item name="android:padding">@dimen/textvalueview_label_padding</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TextValueView.Value">
         <item name="android:textSize">@dimen/textvalueview_value_text_size</item>
-        <item name="android:padding">@dimen/textvalueview_value_padding</item>
+        <item name="android:paddingTop">@dimen/textvalueview_value_padding</item>
+        <item name="android:paddingBottom">@dimen/textvalueview_value_padding</item>
+    </style>
+
+    <style name="TextValueView.Suffix">
+        <item name="android:textSize">@dimen/textvalueview_suffix_text_size</item>
+    </style>
+
+    <style name="SpeedtestMessage">
+        <item name="android:textSize">@dimen/speedtest_msg_text_size</item>
+        <item name="android:padding">@dimen/speedtest_msg_padding</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">italic</item>
     </style>
 
 </resources>

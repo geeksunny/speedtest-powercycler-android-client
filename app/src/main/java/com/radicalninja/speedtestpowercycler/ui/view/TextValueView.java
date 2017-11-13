@@ -16,8 +16,9 @@ import com.radicalninja.speedtestpowercycler.R;
 
 public class TextValueView extends FrameLayout {
 
-    private TextView labelView, valueView;
+    private TextView labelView, valueView, suffixView;
     private String value = "", suffix = "";
+    private boolean separateSuffix;
 
     public TextValueView(@NonNull Context context) {
         super(context);
@@ -45,12 +46,9 @@ public class TextValueView extends FrameLayout {
     protected void init() {
         final LayoutInflater inflater = LayoutInflater.from(getContext());
         final View layout = inflater.inflate(R.layout.view_text_value, this, true);
-        // TODO: this.addView(layout); ? should true be changed to false? ^
         labelView = layout.findViewById(R.id.label);
         valueView = layout.findViewById(R.id.value);
-        // debug default values below
-//        setLabel("Label");
-//        setValue("312", " MB");
+        suffixView = layout.findViewById(R.id.suffix);
     }
 
     protected void parseAttrs(@Nullable final AttributeSet attrs) {
@@ -63,6 +61,8 @@ public class TextValueView extends FrameLayout {
                 0, 0
         );
         try {
+            final boolean aSeparateSuffix = a.getBoolean(R.styleable.TextValueView_separate_suffix, false);
+            setSeparateSuffix(aSeparateSuffix);
             final String aLabel = a.getString(R.styleable.TextValueView_label);
             setLabel(aLabel);
             final String aValue = a.getString(R.styleable.TextValueView_value);
@@ -74,8 +74,19 @@ public class TextValueView extends FrameLayout {
     }
 
     public void refreshValue() {
-        final String valueString = String.format("%s%s", value, suffix);
-        valueView.setText(valueString);
+        if (separateSuffix) {
+            valueView.setText(value);
+            suffixView.setText(suffix);
+        } else {
+            final String valueString = String.format("%s%s", value, suffix);
+            valueView.setText(valueString);
+        }
+    }
+
+    public void setSeparateSuffix(final boolean shouldSeparate) {
+        separateSuffix = shouldSeparate;
+        //suffixView.setVisibility(shouldSeparate ? VISIBLE : GONE);
+        refreshValue();
     }
 
     public void setLabel(final String label) {

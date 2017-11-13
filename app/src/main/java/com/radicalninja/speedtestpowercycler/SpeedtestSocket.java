@@ -9,6 +9,7 @@ import com.radicalninja.speedtestpowercycler.data.OnConfirm;
 import com.radicalninja.speedtestpowercycler.data.OnError;
 import com.radicalninja.speedtestpowercycler.data.OnProgress;
 import com.radicalninja.speedtestpowercycler.data.OnStatus;
+import com.radicalninja.speedtestpowercycler.data.Options;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,6 +63,7 @@ public class SpeedtestSocket {
     private boolean ready, running;
     private OnProgress lastProgress;
     private OnStatus lastStatus;
+    private Options options;
 
     public static SpeedtestSocket create(final String url) {
         try {
@@ -140,8 +142,7 @@ public class SpeedtestSocket {
         eventListeners.add(listener);
     }
 
-    protected void handleReady(final JSONObject data) {
-        // TODO: Configuration data could be passed in this event.
+    protected void handleReady() {
         eventListener.onReady();
     }
 
@@ -180,7 +181,8 @@ public class SpeedtestSocket {
         public void call(Object... args) {
             ready = true;
             final JSONObject json = (args.length > 0) ? (JSONObject) args[0] : null;
-            handleReady(json);
+            options = new Options(json);
+            handleReady();
         }
     };
 

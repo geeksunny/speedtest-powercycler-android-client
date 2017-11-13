@@ -3,8 +3,12 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="textvalueview_label_text_size">22sp</dimen>
-    <dimen name="textvalueview_label_padding">4dp</dimen>
-    <dimen name="textvalueview_value_text_size">32sp</dimen>
+    <dimen name="textvalueview_label_text_size">14sp</dimen>
+    <dimen name="textvalueview_suffix_text_size">12sp</dimen>
+    <dimen name="textvalueview_value_text_size">36sp</dimen>
     <dimen name="textvalueview_value_padding">4dp</dimen>
+
+    <dimen name="speedtest_margin">8dp</dimen>
+    <dimen name="speedtest_msg_text_size">18sp</dimen>
+    <dimen name="speedtest_msg_padding">4dp</dimen>
 </resources>

@@ -4,5 +4,6 @@
         <attr name="label" format="string" />
         <attr name="value" format="string" />
         <attr name="suffix" format="string" />
+        <attr name="separate_suffix" format="boolean" />
     </declare-styleable>
 </resources>
