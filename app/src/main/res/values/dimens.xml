@@ -3,6 +3,10 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="appbar_padding_top">8dp</dimen>
+
+    <integer name="quick_anim_time">100</integer>
+
     <dimen name="textvalueview_label_text_size">14sp</dimen>
     <dimen name="textvalueview_suffix_text_size">12sp</dimen>
     <dimen name="textvalueview_value_text_size">36sp</dimen>
