@@ -8,16 +8,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.radicalninja.speedtestpowercycler.App;
 import com.radicalninja.speedtestpowercycler.R;
+import com.radicalninja.speedtestpowercycler.SpeedtestSocket;
+import com.radicalninja.speedtestpowercycler.data.OnProgress;
+import com.radicalninja.speedtestpowercycler.data.OnStatus;
+import com.radicalninja.speedtestpowercycler.data.Options;
 
 public class OptionsFragment extends Fragment {
 
-    private final OptionsAdapter adapter = new OptionsAdapter();
+    private final EventListener eventListener = new EventListener();
+    private final OptionsAdapter adapter;
 
     private RecyclerView view;
 
     public static OptionsFragment newInstance() {
         return new OptionsFragment();
+    }
+
+    public OptionsFragment() {
+        adapter = new OptionsAdapter(getContext());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        App.getInstance().getSocket().addEventListener(eventListener);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        App.getInstance().getSocket().removeEventListener(eventListener);
     }
 
     @Nullable
@@ -31,4 +53,27 @@ public class OptionsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         this.view.setAdapter(adapter);
     }
+
+    private class EventListener implements SpeedtestSocket.EventListener {
+
+        @Override
+        public void onReady(final Options options) {
+            adapter.setOptions(options);
+        }
+
+        @Override
+        public void onAttached(final Options options, @Nullable OnProgress progress,
+                               @Nullable OnStatus status) {
+            if (adapter.getItemCount() == 0) {
+                adapter.setOptions(options);
+            }
+        }
+
+        @Override
+        public void onFinished() {
+
+        }
+
+    }
+
 }

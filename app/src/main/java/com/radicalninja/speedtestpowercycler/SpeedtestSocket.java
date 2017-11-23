@@ -34,8 +34,8 @@ public class SpeedtestSocket {
     }
 
     public interface EventListener {
-        void onReady();
-        void onAttached(@Nullable final OnProgress progress, @Nullable final OnStatus status);
+        void onReady(final Options options);
+        void onAttached(final Options options, @Nullable final OnProgress progress, @Nullable final OnStatus status);
         void onFinished();
     }
 
@@ -142,8 +142,8 @@ public class SpeedtestSocket {
         eventListeners.add(listener);
     }
 
-    protected void handleReady() {
-        eventListener.onReady();
+    protected void handleReady(final Options options) {
+        eventListener.onReady(options);
     }
 
     protected void handleUpdate(final String name, final JSONObject data) {
@@ -182,7 +182,7 @@ public class SpeedtestSocket {
             ready = true;
             final JSONObject json = (args.length > 0) ? (JSONObject) args[0] : null;
             options = new Options(json);
-            handleReady();
+            handleReady(options);
         }
     };
 
@@ -293,13 +293,13 @@ public class SpeedtestSocket {
 
     private class EventListenerImpl implements EventListener {
         @Override
-        public void onReady() {
+        public void onReady(final Options options) {
             final Runnable task = new Runnable() {
                 @Override
                 public void run() {
                     synchronized (eventListeners) {
                         for (final EventListener listener : eventListeners) {
-                            listener.onReady();
+                            listener.onReady(options);
                         }
                     }
                 }
@@ -308,7 +308,8 @@ public class SpeedtestSocket {
         }
 
         @Override
-        public void onAttached(@Nullable final OnProgress progress, @Nullable final OnStatus status) {
+        public void onAttached(final Options options, @Nullable final OnProgress progress,
+                               @Nullable final OnStatus status) {
             if (null == progress && null == status) {
                 return;
             }
@@ -317,7 +318,7 @@ public class SpeedtestSocket {
                 public void run() {
                     synchronized (eventListeners) {
                         for (final EventListener listener : eventListeners) {
-                            listener.onAttached(progress, status);
+                            listener.onAttached(options, progress, status);
                         }
                     }
                 }

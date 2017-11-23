@@ -19,6 +19,7 @@ import com.radicalninja.speedtestpowercycler.data.OnConfirm;
 import com.radicalninja.speedtestpowercycler.data.OnError;
 import com.radicalninja.speedtestpowercycler.data.OnProgress;
 import com.radicalninja.speedtestpowercycler.data.OnStatus;
+import com.radicalninja.speedtestpowercycler.data.Options;
 import com.radicalninja.speedtestpowercycler.ui.view.TextValueView;
 
 import org.json.JSONObject;
@@ -101,7 +102,7 @@ public class SpeedtestFragment extends Fragment implements View.OnClickListener 
         }
 
         @Override
-        public void onReady() {
+        public void onReady(final Options options) {
             setReady(true);
         }
 
@@ -111,7 +112,8 @@ public class SpeedtestFragment extends Fragment implements View.OnClickListener 
         }
 
         @Override
-        public void onAttached(@Nullable final OnProgress progress, @Nullable final OnStatus status) {
+        public void onAttached(final Options options, @Nullable final OnProgress progress,
+                               @Nullable final OnStatus status) {
             if (null != progress) {
                 progressView.setValue(String.valueOf(progress.getProgress()));
             }
