@@ -1,6 +1,7 @@
 package com.radicalninja.speedtestpowercycler.ui;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.annotation.UiThread;
@@ -21,26 +22,22 @@ public enum UiManager {
 
     INSTANCE;
 
-    private static final float SPLASH_FADE_SCALE = 0.15f;
-
-    private static Handler uiHandler;
-
+    private Handler uiHandler = new Handler(Looper.getMainLooper());
     private FragmentManager fragmentManager;
     private int contentFrameId = R.id.fragment_container;
     private WeakReference<Toolbar> toolbar;
 
     public static void postToUiThread(final Runnable r) {
-        uiHandler.post(r);
+        INSTANCE.uiHandler.post(r);
     }
 
     public static void postDelayedToUiThread(final Runnable r, final long delayMillis) {
-        uiHandler.postDelayed(r, delayMillis);
+        INSTANCE.uiHandler.postDelayed(r, delayMillis);
     }
 
     @UiThread
     public static void init(@NonNull final MainActivity mainActivity) {
         final UiManager manager = INSTANCE;
-        uiHandler = new Handler();
 
         final Toolbar toolbar = (Toolbar) mainActivity.findViewById(R.id.toolbar);
         manager.toolbar = new WeakReference<>(toolbar);

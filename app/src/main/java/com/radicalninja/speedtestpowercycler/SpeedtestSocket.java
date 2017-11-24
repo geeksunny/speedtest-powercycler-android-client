@@ -1,7 +1,5 @@
 package com.radicalninja.speedtestpowercycler;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 
 import com.radicalninja.speedtestpowercycler.data.OnComplete;
@@ -10,6 +8,7 @@ import com.radicalninja.speedtestpowercycler.data.OnError;
 import com.radicalninja.speedtestpowercycler.data.OnProgress;
 import com.radicalninja.speedtestpowercycler.data.OnStatus;
 import com.radicalninja.speedtestpowercycler.data.Options;
+import com.radicalninja.speedtestpowercycler.ui.UiManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,7 +53,6 @@ public class SpeedtestSocket {
     private static final String UPDATE_CONFIRM = "onconfirm";
 
     private final Socket socket;
-    private final Handler handler = new Handler(Looper.getMainLooper());
     private final UpdateListener updateListener = new UpdateListenerImpl();
     private final List<UpdateListener> updateListeners = Collections.synchronizedList(new ArrayList<UpdateListener>());
     private final EventListener eventListener = new EventListenerImpl();
@@ -126,6 +124,20 @@ public class SpeedtestSocket {
         return running;
     }
 
+    protected void attachTo(final EventListener listener) {
+        if (null == options && null == lastProgress && null == lastStatus) {
+            return;
+        }
+        UiManager.postToUiThread(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (eventListeners) {
+                    listener.onAttached(options, lastProgress, lastStatus);
+                }
+            }
+        });
+    }
+
     public void addUpdateListener(final UpdateListener listener) {
         updateListeners.add(listener);
     }
@@ -136,6 +148,7 @@ public class SpeedtestSocket {
 
     public void addEventListener(final EventListener listener) {
         eventListeners.add(listener);
+        attachTo(listener);
     }
 
     public void removeEventListener(final EventListener listener) {
@@ -216,7 +229,7 @@ public class SpeedtestSocket {
         @Override
         public void onProgress(final OnProgress data, final JSONObject raw) {
             lastProgress = data;
-            final Runnable task = new Runnable() {
+            UiManager.postToUiThread(new Runnable() {
                 @Override
                 public void run() {
                     synchronized (updateListeners) {
@@ -225,14 +238,13 @@ public class SpeedtestSocket {
                         }
                     }
                 }
-            };
-            handler.post(task);
+            });
         }
 
         @Override
         public void onStatus(final OnStatus data, final JSONObject raw) {
             lastStatus = data;
-            final Runnable task = new Runnable() {
+            UiManager.postToUiThread(new Runnable() {
                 @Override
                 public void run() {
                     synchronized (updateListeners) {
@@ -241,13 +253,12 @@ public class SpeedtestSocket {
                         }
                     }
                 }
-            };
-            handler.post(task);
+            });
         }
 
         @Override
         public void onComplete(final OnComplete data, final JSONObject raw) {
-            final Runnable task = new Runnable() {
+            UiManager.postToUiThread(new Runnable() {
                 @Override
                 public void run() {
                     synchronized (updateListeners) {
@@ -256,13 +267,12 @@ public class SpeedtestSocket {
                         }
                     }
                 }
-            };
-            handler.post(task);
+            });
         }
 
         @Override
         public void onError(final OnError data, final JSONObject raw) {
-            final Runnable task = new Runnable() {
+            UiManager.postToUiThread(new Runnable() {
                 @Override
                 public void run() {
                     synchronized (updateListeners) {
@@ -271,13 +281,12 @@ public class SpeedtestSocket {
                         }
                     }
                 }
-            };
-            handler.post(task);
+            });
         }
 
         @Override
         public void onConfirm(final OnConfirm data, final JSONObject raw) {
-            final Runnable task = new Runnable() {
+            UiManager.postToUiThread(new Runnable() {
                 @Override
                 public void run() {
                     synchronized (updateListeners) {
@@ -286,15 +295,14 @@ public class SpeedtestSocket {
                         }
                     }
                 }
-            };
-            handler.post(task);
+            });
         }
     }
 
     private class EventListenerImpl implements EventListener {
         @Override
         public void onReady(final Options options) {
-            final Runnable task = new Runnable() {
+            UiManager.postToUiThread(new Runnable() {
                 @Override
                 public void run() {
                     synchronized (eventListeners) {
@@ -303,32 +311,18 @@ public class SpeedtestSocket {
                         }
                     }
                 }
-            };
-            handler.post(task);
+            });
         }
 
         @Override
         public void onAttached(final Options options, @Nullable final OnProgress progress,
                                @Nullable final OnStatus status) {
-            if (null == progress && null == status) {
-                return;
-            }
-            final Runnable task = new Runnable() {
-                @Override
-                public void run() {
-                    synchronized (eventListeners) {
-                        for (final EventListener listener : eventListeners) {
-                            listener.onAttached(options, progress, status);
-                        }
-                    }
-                }
-            };
-            handler.post(task);
+            //
         }
 
         @Override
         public void onFinished() {
-            final Runnable task = new Runnable() {
+            UiManager.postToUiThread(new Runnable() {
                 @Override
                 public void run() {
                     synchronized (eventListeners) {
@@ -337,8 +331,7 @@ public class SpeedtestSocket {
                         }
                     }
                 }
-            };
-            handler.post(task);
+            });
         }
     }
 
