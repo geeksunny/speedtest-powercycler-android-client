@@ -44,6 +44,7 @@ public class Options extends JsonResponse<Options> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected Item parseItem(final JSONObject json) {
         final String type = json.optString("type");
         switch (type.toLowerCase()) {
@@ -98,6 +99,7 @@ public class Options extends JsonResponse<Options> {
             name = json.optString("name");
             description = json.optString("description");
             try {
+                //noinspection unchecked
                 defaultValue = (T) json.opt("default");
             } catch (ClassCastException e) {
                 e.printStackTrace();

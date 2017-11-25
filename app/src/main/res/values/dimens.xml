@@ -15,4 +15,10 @@
     <dimen name="speedtest_margin">8dp</dimen>
     <dimen name="speedtest_msg_text_size">18sp</dimen>
     <dimen name="speedtest_msg_padding">4dp</dimen>
+
+    <dimen name="options_item_padding">8dp</dimen>
+    <dimen name="options_title_text_size">22sp</dimen>
+    <dimen name="options_item_text_size_title">16sp</dimen>
+    <dimen name="options_item_text_size_desc">12sp</dimen>
+    <dimen name="options_item_text_value_width">120dp</dimen>
 </resources>

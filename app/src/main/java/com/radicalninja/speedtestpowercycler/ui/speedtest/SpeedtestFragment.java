@@ -90,8 +90,19 @@ public class SpeedtestFragment extends Fragment implements View.OnClickListener 
     }
 
     private void setReady(final boolean ready) {
-        startStopButton.setEnabled(ready);
         statusLabel.setText(ready ? R.string.speedtest_status_ready : R.string.speedtest_status_not_ready);
+
+        final SpeedtestSocket socket = App.getInstance().getSocket();
+        final int buttonLabel;
+        if (socket.isRunning()) {
+            buttonLabel = R.string.speedtest_button_stop;
+        } else if (socket.isReady()) {
+            buttonLabel = R.string.speedtest_button_start;
+        } else {
+            buttonLabel = R.string.speedtest_button_busy;
+        }
+        startStopButton.setText(buttonLabel);
+        startStopButton.setEnabled(ready);
     }
 
     private class SocketListener implements SpeedtestSocket.EventListener, SpeedtestSocket.UpdateListener {
@@ -108,7 +119,7 @@ public class SpeedtestFragment extends Fragment implements View.OnClickListener 
 
         @Override
         public void onFinished() {
-            setReady(false);
+            setReady(true);
         }
 
         @Override
@@ -127,7 +138,7 @@ public class SpeedtestFragment extends Fragment implements View.OnClickListener 
                         pingView.setValue(String.valueOf(status.getPing()));
                 }
             }
-            // TODO: Ensure the button state is correct
+            setReady(App.getInstance().getSocket().isReady());
         }
 
         @Override

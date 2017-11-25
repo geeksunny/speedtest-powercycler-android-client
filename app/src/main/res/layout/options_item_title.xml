@@ -6,6 +6,8 @@
     <TextView
         android:id="@+id/option_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="@dimen/options_item_padding"
+        android:textSize="@dimen/options_title_text_size" />
 
 </RelativeLayout>

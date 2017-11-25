@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.radicalninja.speedtestpowercycler.R;
@@ -128,20 +129,21 @@ public class OptionsAdapter extends RecyclerView.Adapter<OptionsAdapter.ViewHold
 
     }
 
-    class BooleanViewHolder extends ViewHolder<CheckBox> {
+    class BooleanViewHolder extends ViewHolder<CheckBox>
+            implements CompoundButton.OnCheckedChangeListener {
 
         BooleanViewHolder(View itemView) {
             super(itemView);
         }
 
         @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+        }
+
+        @Override
         void setup(final Options.Item item) {
-            value.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    //
-                }
-            });
+            value.setOnCheckedChangeListener(this);
         }
 
         @Override
@@ -151,7 +153,7 @@ public class OptionsAdapter extends RecyclerView.Adapter<OptionsAdapter.ViewHold
 
     }
 
-    class TextViewHolder extends ViewHolder<TextView> {
+    class TextViewHolder extends ViewHolder<EditText> {
 
         TextViewHolder(View itemView) {
             super(itemView);
@@ -159,7 +161,13 @@ public class OptionsAdapter extends RecyclerView.Adapter<OptionsAdapter.ViewHold
 
         @Override
         void setup(final Options.Item item) {
-
+            final Class type = item.getType();
+            if (type.equals(String.class)) {
+                value.setText((String) item.getDefaultValue());
+            } else if (type.equals(Integer.class)) {
+                final int val = (Integer) item.getDefaultValue();
+                value.setText(String.valueOf(val));
+            }
         }
 
         @Override
