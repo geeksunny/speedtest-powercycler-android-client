@@ -2,6 +2,7 @@ package com.radicalninja.speedtestpowercycler;
 
 import android.support.annotation.Nullable;
 
+import com.radicalninja.speedtestpowercycler.data.Event;
 import com.radicalninja.speedtestpowercycler.data.OnComplete;
 import com.radicalninja.speedtestpowercycler.data.OnConfirm;
 import com.radicalninja.speedtestpowercycler.data.OnError;
@@ -16,6 +17,7 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import io.socket.client.IO;
@@ -57,8 +59,11 @@ public class SpeedtestSocket {
     private final List<UpdateListener> updateListeners = Collections.synchronizedList(new ArrayList<UpdateListener>());
     private final EventListener eventListener = new EventListenerImpl();
     private final List<EventListener> eventListeners = Collections.synchronizedList(new ArrayList<EventListener>());
+    private final LinkedList<Event> eventHistory =
+            (LinkedList<Event>) Collections.synchronizedList(new LinkedList<Event>());
 
     private boolean ready, running;
+    private boolean logEvents;
     private OnProgress lastProgress;
     private OnStatus lastStatus;
     private Options options;
@@ -187,6 +192,19 @@ public class SpeedtestSocket {
     protected void handleFinished(final JSONObject data) {
         // TODO: Pass data to listener?
         eventListener.onFinished();
+    }
+
+    public List<Event> getEventHistory() {
+        //noinspection unchecked
+        return (LinkedList<Event>) eventHistory.clone();
+    }
+
+    private void resetHistory() {
+        eventHistory.clear();
+    }
+
+    private void logEvent(final Event event) {
+        eventHistory.add(event);
     }
 
     private final Emitter.Listener onEventReady = new Emitter.Listener() {

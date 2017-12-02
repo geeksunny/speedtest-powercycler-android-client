@@ -2,7 +2,7 @@
     <string name="app_name">Speedtest Powercycler</string>
     <string name="title_speedtest">Speedtest</string>
     <string name="title_options">Settings</string>
-    <string name="title_log">Output Log</string>
+    <string name="title_log">Event Log</string>
 
     <string name="speedtest_status_ready">Ready</string>
     <string name="speedtest_status_not_ready">Not Ready</string>

@@ -35,8 +35,8 @@ public class OptionsFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         App.getInstance().getSocket().addEventListener(eventListener);
     }
 

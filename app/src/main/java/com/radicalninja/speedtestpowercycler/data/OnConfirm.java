@@ -2,8 +2,7 @@ package com.radicalninja.speedtestpowercycler.data;
 
 import org.json.JSONObject;
 
-// TODO: Is class this necessary?
-public class OnConfirm extends JsonResponse<OnConfirm> {
+public class OnConfirm extends Event<OnConfirm> {
 
     private String message;
 

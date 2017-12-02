@@ -59,8 +59,8 @@ public class SpeedtestFragment extends Fragment implements View.OnClickListener 
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         App.getInstance().getSocket().addEventListener(socketListener);
         App.getInstance().getSocket().addUpdateListener(socketListener);
     }

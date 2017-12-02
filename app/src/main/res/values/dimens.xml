@@ -21,4 +21,8 @@
     <dimen name="options_item_text_size_title">16sp</dimen>
     <dimen name="options_item_text_size_desc">12sp</dimen>
     <dimen name="options_item_text_value_width">120dp</dimen>
+
+    <dimen name="log_text_size">14sp</dimen>
+    <dimen name="log_margin">8dp</dimen>
+    <dimen name="log_padding">8dp</dimen>
 </resources>

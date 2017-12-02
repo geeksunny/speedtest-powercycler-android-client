@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import org.json.JSONObject;
 
-public class OnProgress extends JsonResponse<OnProgress> {
+public class OnProgress extends Event<OnProgress> {
 
     public enum Doing {
         PING("pinging"),

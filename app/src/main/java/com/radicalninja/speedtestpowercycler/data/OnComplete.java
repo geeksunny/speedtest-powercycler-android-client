@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class OnComplete extends JsonResponse<OnComplete> {
+public class OnComplete extends Event<OnComplete> {
 
     private String upload, download, nearest, userAgent, jitter, ip, dns, grades, sid, url;
     private int ping, cpubench;

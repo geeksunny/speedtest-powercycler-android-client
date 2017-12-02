@@ -2,7 +2,7 @@ package com.radicalninja.speedtestpowercycler.data;
 
 import org.json.JSONObject;
 
-public class OnError extends JsonResponse<OnError> {
+public class OnError extends Event<OnError> {
 
     private String message;
 
