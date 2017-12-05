@@ -40,6 +40,11 @@ public class SpeedtestSocket {
         void onFinished();
     }
 
+    public interface EventLogListener {
+        void onEventLogged(final Event event);
+        void onHistoryReset();
+    }
+
     private static final String NAME_KEY = "key";
     private static final String NAME_DATA = "data";
 
@@ -56,9 +61,14 @@ public class SpeedtestSocket {
 
     private final Socket socket;
     private final UpdateListener updateListener = new UpdateListenerImpl();
-    private final List<UpdateListener> updateListeners = Collections.synchronizedList(new ArrayList<UpdateListener>());
     private final EventListener eventListener = new EventListenerImpl();
-    private final List<EventListener> eventListeners = Collections.synchronizedList(new ArrayList<EventListener>());
+    private final EventLogListener eventLogListener = new EventLogListenerImpl();
+    private final List<UpdateListener> updateListeners =
+            Collections.synchronizedList(new ArrayList<UpdateListener>());
+    private final List<EventListener> eventListeners =
+            Collections.synchronizedList(new ArrayList<EventListener>());
+    private final List<EventLogListener> eventLogListeners =
+            Collections.synchronizedList(new ArrayList<EventLogListener>());
     private final LinkedList<Event> eventHistory =
             (LinkedList<Event>) Collections.synchronizedList(new LinkedList<Event>());
 
@@ -160,6 +170,14 @@ public class SpeedtestSocket {
         eventListeners.add(listener);
     }
 
+    public void addEventLogListener(final EventLogListener listener) {
+        eventLogListeners.add(listener);
+    }
+
+    public void removeEventLogListener(final EventLogListener listener) {
+        eventLogListeners.add(listener);
+    }
+
     protected void handleReady(final Options options) {
         eventListener.onReady(options);
     }
@@ -201,10 +219,12 @@ public class SpeedtestSocket {
 
     private void resetHistory() {
         eventHistory.clear();
+        eventLogListener.onHistoryReset();
     }
 
     private void logEvent(final Event event) {
         eventHistory.add(event);
+        eventLogListener.onEventLogged(event);
     }
 
     private final Emitter.Listener onEventReady = new Emitter.Listener() {
@@ -346,6 +366,36 @@ public class SpeedtestSocket {
                     synchronized (eventListeners) {
                         for (final EventListener listener : eventListeners) {
                             listener.onFinished();
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private class EventLogListenerImpl implements EventLogListener {
+        @Override
+        public void onHistoryReset() {
+            UiManager.postToUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (eventLogListeners) {
+                        for (final EventLogListener listener : eventLogListeners) {
+                            listener.onHistoryReset();
+                        }
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onEventLogged(final Event event) {
+            UiManager.postToUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (eventLogListeners) {
+                        for (final EventLogListener listener : eventLogListeners) {
+                            listener.onEventLogged(event);
                         }
                     }
                 }
