@@ -1,8 +1,8 @@
 package com.radicalninja.speedtestpowercycler.ui.log;
 
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +13,13 @@ import com.radicalninja.speedtestpowercycler.App;
 import com.radicalninja.speedtestpowercycler.R;
 import com.radicalninja.speedtestpowercycler.SpeedtestSocket;
 import com.radicalninja.speedtestpowercycler.data.Event;
+import com.radicalninja.speedtestpowercycler.ui.NavigationFragment;
 
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class LogFragment extends Fragment {
+public class LogFragment extends NavigationFragment {
 
     private static final String LOG_FORMAT = "%s | %s :: %s\n";
 
@@ -29,6 +30,12 @@ public class LogFragment extends Fragment {
 
     public static LogFragment newInstance() {
         return new LogFragment();
+    }
+
+    @IdRes
+    @Override
+    public int getNavId() {
+        return R.id.navigation_log;
     }
 
     @Nullable

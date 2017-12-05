@@ -2,8 +2,8 @@ package com.radicalninja.speedtestpowercycler.ui.speedtest;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +20,12 @@ import com.radicalninja.speedtestpowercycler.data.OnError;
 import com.radicalninja.speedtestpowercycler.data.OnProgress;
 import com.radicalninja.speedtestpowercycler.data.OnStatus;
 import com.radicalninja.speedtestpowercycler.data.Options;
+import com.radicalninja.speedtestpowercycler.ui.NavigationFragment;
 import com.radicalninja.speedtestpowercycler.ui.view.TextValueView;
 
 import org.json.JSONObject;
 
-public class SpeedtestFragment extends Fragment implements View.OnClickListener {
+public class SpeedtestFragment extends NavigationFragment implements View.OnClickListener {
 
     private final SocketListener socketListener = new SocketListener();
 
@@ -34,6 +35,12 @@ public class SpeedtestFragment extends Fragment implements View.OnClickListener 
 
     public static SpeedtestFragment newInstance() {
         return new SpeedtestFragment();
+    }
+
+    @IdRes
+    @Override
+    public int getNavId() {
+        return R.id.navigation_home;
     }
 
     @Nullable

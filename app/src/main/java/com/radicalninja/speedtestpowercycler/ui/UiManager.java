@@ -5,12 +5,11 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.annotation.UiThread;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 
 import com.radicalninja.speedtestpowercycler.R;
 import com.radicalninja.speedtestpowercycler.ui.options.OptionsFragment;
@@ -22,9 +21,10 @@ public enum UiManager {
 
     INSTANCE;
 
+    private final int contentFrameId = R.id.fragment_container;
+
     private Handler uiHandler = new Handler(Looper.getMainLooper());
     private FragmentManager fragmentManager;
-    private int contentFrameId = R.id.fragment_container;
     private WeakReference<Toolbar> toolbar;
 
     public static void postToUiThread(final Runnable r) {
@@ -39,30 +39,19 @@ public enum UiManager {
     public static void init(@NonNull final MainActivity mainActivity) {
         final UiManager manager = INSTANCE;
 
-        final Toolbar toolbar = (Toolbar) mainActivity.findViewById(R.id.toolbar);
+        final Toolbar toolbar = mainActivity.findViewById(R.id.toolbar);
         manager.toolbar = new WeakReference<>(toolbar);
         mainActivity.setSupportActionBar(toolbar);
         manager.fragmentManager = mainActivity.getSupportFragmentManager();
     }
-
-    final View.OnClickListener fabClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-                Snackbar.make(view, "Find stops near me", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-        }
-    };
 
     public void startApp() {
          loadInitialFragment();
     }
 
     public boolean back() {
-        if (fragmentManager.getBackStackEntryCount() > 1) {
-            fragmentManager.popBackStack();
-            return true;
-        }
-        return false;
+        Log.d("abc", "Backstack count: " + fragmentManager.getBackStackEntryCount());
+        return fragmentManager.getBackStackEntryCount() > 1 && fragmentManager.popBackStackImmediate();
     }
 
     public void setTitle(final CharSequence title) {
@@ -83,6 +72,10 @@ public enum UiManager {
         }
     }
 
+    public Fragment getCurrentFragment() {
+        return fragmentManager.findFragmentById(contentFrameId);
+    }
+
     private void loadFragment(final Fragment fragment) {
         loadFragment(fragment, true);
     }
@@ -99,7 +92,7 @@ public enum UiManager {
     }
 
     private void loadInitialFragment() {
-        loadFragment(SpeedtestFragment.newInstance(), false);
+        loadFragment(SpeedtestFragment.newInstance(), true);
     }
 
     public void toSpeedtest() {

@@ -1,8 +1,8 @@
 package com.radicalninja.speedtestpowercycler.ui.options;
 
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,8 +15,9 @@ import com.radicalninja.speedtestpowercycler.SpeedtestSocket;
 import com.radicalninja.speedtestpowercycler.data.OnProgress;
 import com.radicalninja.speedtestpowercycler.data.OnStatus;
 import com.radicalninja.speedtestpowercycler.data.Options;
+import com.radicalninja.speedtestpowercycler.ui.NavigationFragment;
 
-public class OptionsFragment extends Fragment {
+public class OptionsFragment extends NavigationFragment {
 
     private final EventListener eventListener = new EventListener();
 
@@ -26,6 +27,12 @@ public class OptionsFragment extends Fragment {
 
     public static OptionsFragment newInstance() {
         return new OptionsFragment();
+    }
+
+    @IdRes
+    @Override
+    public int getNavId() {
+        return R.id.navigation_options;
     }
 
     @Override
